@@ -1,1 +1,269 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Baraa Almshalah — Software Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FAF9F6;
+    --paper-dim:#F1EFE9;
+    --ink:#1A1A2E;
+    --ink-soft:#4A4A5E;
+    --comment:#9094A0;
+    --line:#E4E1D8;
+    --teal:#1F8A77;
+    --teal-dim:#E4F2EF;
+    --amber:#C8862B;
+    --amber-dim:#FBF0DF;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    line-height:1.6;
+  }
+  .mono{font-family:'JetBrains Mono',monospace;}
+  .titlebar{
+    position:sticky; top:0; z-index:50;
+    background:var(--ink);
+    color:var(--paper);
+    padding:12px 20px;
+    display:flex; align-items:center; gap:10px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;
+  }
+  .dots{display:flex; gap:6px; margin-right:10px;}
+  .dot{width:10px; height:10px; border-radius:50%;}
+  .dot.red{background:#E5564E;} .dot.yellow{background:#E5B84E;} .dot.green{background:#4EBA6F;}
+  .titlebar-name{color:#B8B8C8;}
+  .titlebar-tabs{margin-left:auto; display:flex; gap:18px;}
+  .titlebar-tabs a{color:#9094A0; text-decoration:none; font-size:12px; transition:color .15s;}
+  .titlebar-tabs a:hover, .titlebar-tabs a.active{color:var(--paper);}
+  .wrap{
+    display:grid;
+    grid-template-columns:240px 1fr;
+    min-height:100vh;
+  }
+  .sidebar{
+    background:var(--paper-dim);
+    border-right:1px solid var(--line);
+    padding:24px 0;
+    position:sticky; top:45px; height:calc(100vh - 45px);
+  }
+  .sidebar-section{padding:0 18px; margin-bottom:6px;}
+  .sidebar-label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--comment); margin-bottom:10px; display:block;
+  }
+  .file-link{
+    display:flex; align-items:center; gap:8px;
+    padding:7px 18px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;
+    color:var(--ink-soft);
+    text-decoration:none;
+    border-left:2px solid transparent;
+    transition:all .15s;
+  }
+  .file-link:hover{background:rgba(31,138,119,.08); color:var(--ink);}
+  .file-link.active{border-left-color:var(--teal); color:var(--teal); background:var(--teal-dim);}
+  .file-icon{font-size:11px; opacity:.6;}
+  main{padding:48px 56px; max-width:760px;}
+  section{margin-bottom:64px; scroll-margin-top:70px;}
+  .file-header{
+    display:flex; align-items:baseline; gap:10px;
+    font-family:'JetBrains Mono',monospace;
+    color:var(--comment);
+    font-size:13px;
+    margin-bottom:18px;
+    padding-bottom:10px;
+    border-bottom:1px solid var(--line);
+  }
+  .file-header .fname{color:var(--ink); font-weight:600; font-size:14px;}
+  h1{
+    font-family:'JetBrains Mono',monospace;
+    font-size:34px; font-weight:700;
+    line-height:1.25;
+    margin-bottom:6px;
+  }
+  .role{
+    font-family:'JetBrains Mono',monospace;
+    color:var(--teal); font-size:15px; margin-bottom:22px;
+  }
+  .comment-line{color:var(--comment); font-style:italic;}
+  p.body-text{font-size:16px; color:var(--ink-soft); max-width:600px;}
+  .contact-row{display:flex; flex-wrap:wrap; gap:18px; margin-top:18px;}
+  .contact-pill{
+    display:flex; align-items:center; gap:7px;
+    font-family:'JetBrains Mono',monospace; font-size:13px;
+    padding:7px 14px; border:1px solid var(--line); border-radius:6px;
+    color:var(--ink-soft); text-decoration:none;
+    transition:all .15s;
+  }
+  .contact-pill:hover{border-color:var(--teal); color:var(--teal); background:var(--teal-dim);}
+  .json-block{
+    font-family:'JetBrains Mono',monospace; font-size:14px;
+    background:var(--paper-dim);
+    border:1px solid var(--line); border-radius:8px;
+    padding:22px 24px;
+  }
+  .json-key{color:var(--teal);}
+  .json-str{color:var(--amber);}
+  .json-punc{color:var(--comment);}
+  .skill-row{margin-bottom:9px; padding-left:18px;}
+  .skill-row:last-child{margin-bottom:0;}
+  .project-card{
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:20px 22px;
+    margin-bottom:16px;
+    background:var(--paper);
+    transition:border-color .15s, transform .15s;
+  }
+  .project-card:hover{border-color:var(--teal);}
+  .project-card.empty{
+    border-style:dashed;
+    color:var(--comment);
+    text-align:center;
+    padding:32px 22px;
+  }
+  .project-title{
+    font-family:'JetBrains Mono',monospace; font-weight:600; font-size:15px;
+    display:flex; align-items:center; gap:8px; margin-bottom:8px;
+  }
+  .project-tag{
+    font-family:'JetBrains Mono',monospace; font-size:11px;
+    background:var(--amber-dim); color:var(--amber);
+    padding:2px 8px; border-radius:4px;
+  }
+  .project-desc{color:var(--ink-soft); font-size:14px;}
+  footer{
+    border-top:1px solid var(--line);
+    padding:32px 56px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px; color:var(--comment);
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
+  }
+  .cursor{
+    display:inline-block; width:8px; height:16px; background:var(--teal);
+    margin-left:3px; vertical-align:middle;
+    animation:blink 1s steps(1) infinite;
+  }
+  @keyframes blink{50%{opacity:0;}}
+  .status-bar{
+    background:var(--teal); color:#fff;
+    font-family:'JetBrains Mono',monospace; font-size:11px;
+    padding:5px 20px; display:flex; gap:24px;
+  }
+  @media(max-width:780px){
+    .wrap{grid-template-columns:1fr;}
+    .sidebar{position:static; height:auto; display:flex; overflow-x:auto; padding:14px;}
+    .sidebar-section{display:flex; align-items:center; gap:10px; padding:0 8px;}
+    .sidebar-label{margin-bottom:0;}
+    main{padding:32px 22px;}
+    .titlebar-tabs{display:none;}
+    h1{font-size:26px;}
+  }
+  :focus-visible{outline:2px solid var(--teal); outline-offset:2px;}
+</style>
+</head>
+<body>
+
+<div class="titlebar">
+  <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+  <span class="titlebar-name">baraa-almshalah — portfolio</span>
+  <div class="titlebar-tabs">
+    <a href="#about" class="active">about.md</a>
+    <a href="#skills">skills.json</a>
+    <a href="#projects">projects/</a>
+    <a href="#contact">contact.txt</a>
+  </div>
+</div>
+<div class="status-bar">
+  <span>● main</span>
+  <span>UTF-8</span>
+  <span>Remote-ready</span>
+</div>
+
+<div class="wrap">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <span class="sidebar-label">Explorer</span>
+    </div>
+    <a href="#about" class="file-link active"><span class="file-icon">📄</span>about.md</a>
+    <a href="#skills" class="file-link"><span class="file-icon">⚙</span>skills.json</a>
+    <a href="#projects" class="file-link"><span class="file-icon">📁</span>projects/</a>
+    <a href="#contact" class="file-link"><span class="file-icon">✉</span>contact.txt</a>
+  </aside>
+
+  <main>
+    <section id="about">
+      <div class="file-header"><span class="fname">about.md</span><span>— readme</span></div>
+      <p class="comment-line mono" style="margin-bottom:14px;">// junior developer, open to remote work</p>
+      <h1>Baraa S. M. Almshalah<span class="cursor"></span></h1>
+      <p class="role">&gt; Aspiring Software Developer</p>
+      <p class="body-text">
+        Self-taught junior programmer with 1–3 years of hands-on experience across
+        web development and scripting languages. I like turning small problems into
+        working code, and I'm looking for a remote team where I can keep learning
+        while contributing from day one.
+      </p>
+      <div class="contact-row">
+        <a class="contact-pill" href="mailto:baraaalmshalah@gmail.com">✉ baraaalmshalah@gmail.com</a>
+        <a class="contact-pill" href="#">☎ +39 379 192 4866</a>
+        <a class="contact-pill" href="#">🌍 Open to remote</a>
+      </div>
+    </section>
+
+    <section id="skills">
+      <div class="file-header"><span class="fname">skills.json</span><span>— technical stack</span></div>
+      <div class="json-block">
+        <span class="json-punc">{</span>
+        <div class="skill-row"><span class="json-key">"web"</span><span class="json-punc">: [</span><span class="json-str">"HTML"</span><span class="json-punc">, </span><span class="json-str">"CSS"</span><span class="json-punc">, </span><span class="json-str">"JavaScript"</span><span class="json-punc">, </span><span class="json-str">"Bootstrap"</span><span class="json-punc">],</span></div>
+        <div class="skill-row"><span class="json-key">"backend"</span><span class="json-punc">: [</span><span class="json-str">"PHP"</span><span class="json-punc">, </span><span class="json-str">"SQL"</span><span class="json-punc">],</span></div>
+        <div class="skill-row"><span class="json-key">"languages"</span><span class="json-punc">: [</span><span class="json-str">"Python"</span><span class="json-punc">, </span><span class="json-str">"Scratch"</span><span class="json-punc">],</span></div>
+        <div class="skill-row"><span class="json-key">"spoken"</span><span class="json-punc">: [</span><span class="json-str">"Arabic (native)"</span><span class="json-punc">, </span><span class="json-str">"English (A2)"</span><span class="json-punc">, </span><span class="json-str">"Italian (B2)"</span><span class="json-punc">],</span></div>
+        <div class="skill-row"><span class="json-key">"status"</span><span class="json-punc">: </span><span class="json-str">"actively learning"</span></div>
+        <span class="json-punc">}</span>
+      </div>
+    </section>
+
+    <section id="projects">
+      <div class="file-header"><span class="fname">projects/</span><span>— 0 items</span></div>
+      <div class="project-card empty">
+        <div class="mono" style="font-size:13px;">// no projects added yet</div>
+        <div style="font-size:13px; margin-top:6px;">Add your first project here — title, short description, and a link to the code.</div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer id="contact">
+  <span>// contact.txt</span>
+  <span>baraaalmshalah@gmail.com</span>
+  <span>© 2026 Baraa Almshalah</span>
+</footer>
+
+<script>
+  const links = document.querySelectorAll('.file-link, .titlebar-tabs a');
+  const sections = document.querySelectorAll('main section');
+  const obs = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        links.forEach(l=>{
+          l.classList.toggle('active', l.getAttribute('href') === '#'+e.target.id);
+        });
+      }
+    });
+  }, {rootMargin:'-40% 0px -50% 0px'});
+  sections.forEach(s=>obs.observe(s));
+</script>
+</body>
+</html>
